@@ -10,33 +10,65 @@ using UnityEngine;
 // put this script on a Sphere... it will move around, and drop a path of floor tiles behind it
 
 public class Pathmaker : MonoBehaviour {
+	public static int globalCounter; 
 
+	int maxCounter;
+	//insert color code
+
+	void Start (){
+		//globalCounter = Random.Range (200, 500); 
+		maxCounter = Random.Range (50, 90);
+	}
 // STEP 2: ============================================================================================
 // translate the pseudocode below
 
 //	DECLARE CLASS MEMBER VARIABLES:
-//	Declare a private integer called counter that starts at 0; 		// counter var will track how many floor tiles I've instantiated
-//	Declare a public Transform called floorPrefab, assign the prefab in inspector;
-//	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
+	int counter = 0; 	
+	//public Transform floorPrefab;
+	public Transform pathmakerSpherePrefab; 
 
+	int tileNum;
+	Transform curTile;
+	public Transform tileOne; 
+	public Transform tileTwo; 
+	public Transform tileThree; 
 
 	void Update () {
-//		If counter is less than 50, then:
-//		Generate a random number from 0.0f to 1.0f;
-//		If random number is less than 0.25f, then rotate myself 90 degrees;
-//			... Else if number is 0.25f-0.5f, then rotate myself -90 degrees;
-//			... Else if number is 0.99f-1.0f, then instantiate a pathmakerSpherePrefab clone at my current position;
-//		// end elseIf
+		Debug.Log (globalCounter);
 
-//		Instantiate a floorPrefab clone at current position;
+		if (globalCounter > 0) {
+			if (counter < maxCounter) {
+				float randNum = Random.Range (0f, 1.0f); 
+				if (randNum < 0.10f) {
+					transform.Rotate (0f, 90f, 0f); 
+				} else if (randNum > 0.10f && randNum < 0.2f) {
+					transform.Rotate (0f, -90f, 0f);
+				} else if (randNum > 0.90f) {
+					Instantiate (pathmakerSpherePrefab, transform.position, transform.rotation); 
+				}
+				//		// end elseIf
+				tileNum = Random.Range (1, 4);
+				if (tileNum == 1) {
+					curTile = tileOne;
+				}
+				if (tileNum == 2) {
+					curTile = tileTwo;
+				}
+				if (tileNum == 3) {
+					curTile = tileThree;
+				}
 
-//		Move forward ("forward" in local space, relative to the direction I'm facing) by 5 units;
-//			Increment counter;
-//			Else:
-//			Destroy my game object; 		// self destruct if I've made enough tiles already
+				Instantiate (curTile, transform.position, transform.rotation); 
+
+				transform.position += transform.forward * 5f; 
+
+				counter++;
+				globalCounter--; 
+			} else { Destroy (gameObject); }
+		} else { Destroy (gameObject); }
 	}
-
-} // end of class scope
+}
+	// end of class scope
 
 // MORE STEPS BELOW!!!........
 
@@ -58,9 +90,9 @@ public class Pathmaker : MonoBehaviour {
 // STEP 4: ======================================================================================
 // tune your values...
 
-// a. how long should a pathmaker live? etc.
-// b. how would you tune the probabilities to generate lots of long hallways? does it work?
-// c. tweak all the probabilities that you want... what % chance is there for a pathmaker to make a pathmaker? is that too high or too low?
+// a. how long should a pathmaker live? etc. sphere will be destoryed when it hits the limit which is 500. 
+// b. how would you tune the probabilities to generate lots of long hallways? does it work? decrease random range for min or max and yes
+// c. tweak all the probabilities that you want... what % chance is there for a pathmaker to make a pathmaker? is that too high or too low? 0.01% chance??? Too low. 
 
 
 
